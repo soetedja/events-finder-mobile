@@ -8,6 +8,10 @@ import { name as appName } from './app.json';
 import store from './store';
 import { Provider } from 'react-redux';
 import Color from './constants/Colors';
+import axios from 'axios';
+import { API_URL } from './config/config';
+
+axios.defaults.baseURL = API_URL;
 
 export default function Main() {
   return (

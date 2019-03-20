@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import {
   StyleSheet,
   View,
@@ -12,7 +11,8 @@ import {
 } from 'react-native';
 import { Input, Button } from 'react-native-elements';
 import { connect } from 'react-redux';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import PropTypes from 'prop-types';
+import Icon from 'react-native-vector-icons/Ionicons';
 import SimpleIcon from 'react-native-vector-icons/SimpleLineIcons';
 import { login, register } from '../actions';
 
@@ -36,6 +36,10 @@ TabSelector.propTypes = {
 };
 
 class AuthScreen extends Component {
+  state = {
+    token: ''
+  };
+
   constructor(props) {
     super(props);
 
@@ -49,29 +53,55 @@ class AuthScreen extends Component {
       isPasswordValid: true,
       isConfirmationValid: true
     };
+  }
 
-    this.selectCategory = this.selectCategory.bind(this);
-    // this.login = this.login.bind(this);
-    // this.signUp = this.signUp.bind(this);
+  // async UNSAFE_componentWillMount() {
+  //   let token = await AsyncStorage.getItem('token');
+  //   // AsyncStorage.removeItem('fb_token');
+  //   if (token) {
+  //     this.setState({ token });
+  //     this.props.navigation.navigate('Map');
+  //   } else {
+  //     this.setState({ token: false });
+  //   }
+  // }
+
+  static getDerivedStateFromProps(nextProps) {
+    if (nextProps.token) {
+      return { token: nextProps.token };
+    }
+
+    return null;
+  }
+
+  componentDidUpdate() {
+    if (this.props.token) {
+      // Perform some operation here
+      this.onAuthComplete(this.props.token);
+    }
+  }
+
+  onAuthComplete(token) {
+    LayoutAnimation.easeInEaseOut();
+    if (token) {
+      this.props.navigation.navigate('Map');
+    }
+    this.setState({
+      isLoading: false
+    });
   }
 
   componentDidMount() {
     this.setState({ fontLoaded: true });
   }
 
-  selectCategory(selectedCategory) {
+  selectCategory = selectedCategory => {
     LayoutAnimation.easeInEaseOut();
     this.setState({
       selectedCategory,
       isLoading: false
     });
-  }
-
-  validateEmail(email) {
-    let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
-    return re.test(email);
-  }
+  };
 
   login = () => {
     const { email, password } = this.state;
@@ -175,7 +205,7 @@ class AuthScreen extends Component {
                   <Input
                     leftIcon={
                       <Icon
-                        name='envelope-o'
+                        name='md-mail'
                         color='rgba(0, 0, 0, 0.38)'
                         size={25}
                         style={{ backgroundColor: 'transparent' }}
@@ -390,10 +420,14 @@ const styles = StyleSheet.create({
 });
 
 AuthScreen.propTypes = {
-  login: PropTypes.func.isRequired
+  login: PropTypes.func.isRequired,
+  navigation: PropTypes.object.isRequired,
+  token: PropTypes.string
 };
 
+const mapStateToProps = ({ auth }) => ({ token: auth.token });
+
 export default connect(
-  null,
+  mapStateToProps,
   { login, register }
 )(AuthScreen);

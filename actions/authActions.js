@@ -1,8 +1,9 @@
 import axios from 'axios';
-// import setAuthToken from '../utils/setAuthToken';
+import setAuthToken from '../utils/setAuthToken';
+import AsyncStorage from '@react-native-community/async-storage';
 import jwt_decode from 'jwt-decode';
 
-import { SET_CURRENT_USER } from './types';
+import { SET_CURRENT_USER, LOGIN_SUCCESS, LOGOUT_SUCCESS } from './types';
 
 // Register user
 export const register = (userData, history) => dispatch => {
@@ -18,20 +19,21 @@ export const register = (userData, history) => dispatch => {
 // Login
 export const login = params => dispatch => {
   axios
-    .post('http://localhost:5000/users/login', params)
+    .post('/users/login', params)
     .then(res => {
-      console.log(res);
       // // Save token to local storage
       const { token } = res.data;
       // // set token to ls
       // localStorage.setItem('jwtToken', token);
+      AsyncStorage.setItem('token', token);
       // // set token to auth header
-      // setAuthToken(token);
+      setAuthToken(token);
       // // decode token to get user data
       const decoded = jwt_decode(token);
-      console.log(decoded);
+
+      dispatch({ type: LOGIN_SUCCESS, payload: token });
       // // set current user
-      // dispatch(setCurrentUser(decoded));
+      dispatch(setCurrentUser(decoded));
     })
     .catch(err => console.log(err));
 };
@@ -43,11 +45,13 @@ export const setCurrentUser = decoded => ({
 });
 
 // Log user out
-export const logoutUser = () => dispatch => {
+export const logout = () => dispatch => {
   // remove token from local storage
-  // localStorage.removeItem('jwtToken');
+  AsyncStorage.removeItem('token');
   // // remove auth header for future request
-  // setAuthToken(false);
+  setAuthToken(false);
   // // set current user to {}
-  // dispatch(setCurrentUser({}));
+  dispatch(setCurrentUser({}));
+
+  dispatch({ type: LOGOUT_SUCCESS, payload: '' });
 };

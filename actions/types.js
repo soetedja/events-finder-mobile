@@ -1,8 +1,11 @@
 // User
 export const REGISTER = 'REGISTER';
 export const LOGIN = 'LOGIN';
-export const FACEBOOK_LOGIN_SUCCESS = 'facebook_login_success';
-export const FACEBOOK_LOGIN_FAIL = 'facebook_login_fail';
+export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
+export const LOGIN_FAIL = 'LOGIN_FAIL';
+export const SET_CURRENT_USER = 'SET_CURRENT_USER';
+export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';
 
 // Event
-export const CREATE_EVENT = 'CREATE_EVENT';
+export const CREATE_EVENT_SUCCESS = 'CREATE_EVENT_SUCCESS';
+export const FETCH_EVENT_SUCCESS = 'FETCH_EVENT_SUCCESS';

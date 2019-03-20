@@ -2,7 +2,7 @@
   package="com.eventsfindermobile">
 
     <uses-permission android:name="android.permission.INTERNET" />
-
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <application
       android:name=".MainApplication"
       android:label="@string/app_name"
@@ -21,6 +21,10 @@
         </intent-filter>
       </activity>
       <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
+      <!-- You will only need to add this meta-data tag, but make sure it's a child of application -->
+      <meta-data
+          android:name="com.google.android.geo.API_KEY"
+          android:value="AIzaSyAkONXnwJ4SxMqOqq8XVqWnIOlUb2PxV-8"/>
     </application>
 
 </manifest>

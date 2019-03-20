@@ -15,7 +15,7 @@ export default class WelcomeScreen extends React.Component {
   state = { token: null };
 
   async UNSAFE_componentWillMount() {
-    let token = await AsyncStorage.getItem('fb_token');
+    let token = await AsyncStorage.getItem('token');
     // AsyncStorage.removeItem('fb_token');
     if (token) {
       this.setState({ token });
