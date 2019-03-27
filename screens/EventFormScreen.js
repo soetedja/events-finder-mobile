@@ -14,7 +14,7 @@ import DateTimePicker from 'react-native-modal-datetime-picker';
 import moment from 'moment';
 
 import LocationItem from '../components/LocationItem';
-import { GMAPS_API_KEY } from '../config/key';
+import { GMAPS_API_KEY } from '../config/keys';
 import { createEvent } from '../actions';
 
 class EventFormScreen extends Component {
@@ -32,7 +32,9 @@ class EventFormScreen extends Component {
       icon: '',
       url: '',
       startDateView: '',
-      endDateView: ''
+      endDateView: '',
+      startDateTimePickerVisible: false,
+      endDateTimePickerVisible: false
     };
   }
 
@@ -234,6 +236,15 @@ class EventFormScreen extends Component {
           mode='datetime'
         />
         {this.renderLocationField()}
+        <Input
+          label='Poster URI'
+          value={this.state.poster}
+          placeholder='Enter poster'
+          onChangeText={poster => this.setState({ poster })}
+          containerStyle={{ marginBottom: 15 }}
+          errorStyle={{ color: 'red' }}
+          errorMessage=''
+        />
         <Button
           title='Submit'
           buttonStyle={styles.submit}
@@ -272,7 +283,7 @@ EventFormScreen.propTypes = {
   event: PropTypes.object
 };
 const mapStateToProps = state => ({
-  event: state.event.event
+  event: state.event.event || {}
 });
 
 export default connect(

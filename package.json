@@ -4,35 +4,37 @@
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
-    "test": "jest"
+    "test": "jest",
+    "lint": "eslint ."
   },
-  "proxy": "http://localhost:5000",
   "dependencies": {
-    "@react-native-community/async-storage": "^1.2.1",
+    "@react-native-community/async-storage": "^1.2.2",
     "axios": "^0.18.0",
     "jwt-decode": "^2.2.0",
     "moment": "^2.24.0",
     "react": "16.8.3",
-    "react-native": "0.59.0",
+    "react-native": "0.59.2",
     "react-native-elements": "^1.1.0",
     "react-native-gesture-handler": "^1.1.0",
     "react-native-google-autocomplete": "^0.1.5",
     "react-native-maps": "^0.23.0",
+    "react-native-maps-directions": "^1.6.0",
     "react-native-modal-datetime-picker": "^6.1.0",
-    "react-native-vector-icons": "^6.4.1",
-    "react-navigation": "^3.3.2",
+    "react-native-vector-icons": "^6.4.2",
+    "react-navigation": "^3.5.1",
     "react-redux": "^6.0.1",
     "redux": "^4.0.1",
     "redux-devtools-extension": "^2.13.8",
     "redux-thunk": "^2.3.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.3.4",
-    "@babel/runtime": "^7.3.4",
+    "@babel/core": "^7.4.0",
+    "@babel/runtime": "^7.4.2",
+    "@react-native-community/eslint-config": "^0.0.3",
     "babel-jest": "^24.5.0",
-    "eslint-plugin-react": "^7.12.4",
+    "eslint": "^5.15.3",
     "jest": "^24.5.0",
-    "metro-react-native-babel-preset": "^0.53.0",
+    "metro-react-native-babel-preset": "^0.53.1",
     "react-test-renderer": "16.8.3"
   },
   "jest": {

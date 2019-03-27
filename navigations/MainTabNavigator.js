@@ -14,6 +14,7 @@ import SettingScreen from '../screens/SettingScreen';
 import MapScreen from '../screens/MapScreen';
 import EventFormScreen from '../screens/EventFormScreen';
 import IconWithBadge from '../components/IconWithBadge';
+import EventDetailScreen from '../screens/EventDetailScreen';
 
 const HomeStack = createStackNavigator(
   {
@@ -78,6 +79,12 @@ const MapStack = createStackNavigator({
     screen: EventFormScreen,
     navigationOptions: {
       title: 'Post a new Event'
+    }
+  },
+  EventDetail: {
+    screen: EventDetailScreen,
+    navigationOptions: {
+      title: 'Event Details'
     }
   }
 });

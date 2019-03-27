@@ -1,4 +1,8 @@
-import { CREATE_EVENT_SUCCESS, FETCH_EVENT_SUCCESS } from '../actions/types';
+import {
+  CREATE_EVENT_SUCCESS,
+  FETCH_EVENT_SUCCESS,
+  SET_SELECTED_EVENT
+} from '../actions/types';
 
 const initialState = {
   event: {
@@ -16,8 +20,12 @@ export default function(state = initialState, action) {
       };
     case FETCH_EVENT_SUCCESS:
       return {
-        ...state,
         events: action.payload
+      };
+    case SET_SELECTED_EVENT:
+      return {
+        ...state,
+        event: action.payload
       };
     default:
       return state;
