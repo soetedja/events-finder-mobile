@@ -14,12 +14,29 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/Ionicons';
 import SimpleIcon from 'react-native-vector-icons/SimpleLineIcons';
-import { login, register } from '../actions';
+import {
+  GoogleSignin,
+  GoogleSigninButton,
+  statusCodes
+} from 'react-native-google-signin';
 
+import { login, register, googleSignIn } from '../actions';
+import keys from '../config/keys';
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 const BG_IMAGE = require('../assets/images/bg_screen2.jpg');
+
+GoogleSignin.configure({
+  scopes: ['profile', 'email', 'openid'], // what API you want to access on behalf of the user, default is email and profile
+  webClientId: keys.google.client_id, // client ID of type WEB for your server (needed to verify user ID and offline access)
+  offlineAccess: false, // if you want to access Google API on behalf of the user FROM YOUR SERVER
+  // hostedDomain: 'https://mongosilakan.net', // specifies a hosted domain restriction
+  loginHint: '', // [iOS] The user's ID, or email address, to be prefilled in the authentication UI if possible. [See docs here](https://developers.google.com/identity/sign-in/ios/api/interface_g_i_d_sign_in.html#a0a68c7504c31ab0b728432565f6e33fd)
+  forceConsentPrompt: true, // [Android] if you want to show the authorization prompt at each login.
+  accountName: '', // [Android] specifies an account name on the device that should be used
+  iosClientId: '' // [iOS] optional, if you want to specify the client ID of type iOS (otherwise, it is taken from GoogleService-Info.plist)
+});
 
 // Enable LayoutAnimation on Android
 UIManager.setLayoutAnimationEnabledExperimental &&
@@ -65,6 +82,26 @@ class AuthScreen extends Component {
   //     this.setState({ token: false });
   //   }
   // }
+  // Somewhere in your code
+  _signIn = async () => {
+    try {
+      await GoogleSignin.hasPlayServices();
+      const userInfo = await GoogleSignin.signIn();
+      console.log(userInfo);
+      this.props.googleSignIn(userInfo);
+    } catch (error) {
+      console.error(error);
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        // user cancelled the login flow
+      } else if (error.code === statusCodes.IN_PROGRESS) {
+        // operation (f.e. sign in) is in progress already
+      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        // play services not available or outdated
+      } else {
+        // some other error happened
+      }
+    }
+  };
 
   static getDerivedStateFromProps(nextProps) {
     if (nextProps.token) {
@@ -309,6 +346,16 @@ class AuthScreen extends Component {
                     loading={isLoading}
                     disabled={isLoading}
                   />
+                  <Text>Or</Text>
+                  {/* <View> */}
+                  <GoogleSigninButton
+                    style={{ width: 192, height: 48 }}
+                    size={GoogleSigninButton.Size.Wide}
+                    color={GoogleSigninButton.Color.Dark}
+                    onPress={this._signIn}
+                    disabled={this.state.isSigninInProgress}
+                  />
+                  {/* </View> */}
                 </View>
               </KeyboardAvoidingView>
               <View style={styles.helpContainer}>
@@ -429,5 +476,5 @@ const mapStateToProps = ({ auth }) => ({ token: auth.token });
 
 export default connect(
   mapStateToProps,
-  { login, register }
+  { login, register, googleSignIn }
 )(AuthScreen);

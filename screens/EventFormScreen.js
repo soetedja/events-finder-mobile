@@ -14,7 +14,7 @@ import DateTimePicker from 'react-native-modal-datetime-picker';
 import moment from 'moment';
 
 import LocationItem from '../components/LocationItem';
-import { GMAPS_API_KEY } from '../config/keys';
+import keys from '../config/keys';
 import { createEvent } from '../actions';
 
 class EventFormScreen extends Component {
@@ -117,7 +117,7 @@ class EventFormScreen extends Component {
 
     return (
       <GoogleAutoComplete
-        apiKey={GMAPS_API_KEY}
+        apiKey={keys.google.maps_api_key}
         debounce={500}
         minLength={3}
         queryTypes='establishment'

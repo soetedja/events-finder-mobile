@@ -13,8 +13,9 @@ import PropTypes from 'prop-types';
 import MapView, { Marker, ProviderPropType, Polyline } from 'react-native-maps';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MapViewDirections from 'react-native-maps-directions';
-import { GMAPS_API_KEY } from '../config/keys';
 
+import keys from '../config/keys';
+import getDistanceMatrix from '../utils/getDistanceMatrix';
 import {
   fetchEvents,
   fetchEventsInThisArea,
@@ -46,7 +47,8 @@ class MapScreen extends React.Component {
       },
       region: {},
       mapBoundaries: {},
-      markers: []
+      markers: [],
+      distance: {}
     };
   }
 
@@ -132,31 +134,75 @@ class MapScreen extends React.Component {
     </Marker>
   );
 
-  renderMarker = events => events.map((event, id) => (
-      <Marker
-        // title={event.title}
-        // image={flagPinkImg}
-        key={event._id}
-        // pinColor={'#ff00ff'}
-        coordinate={{
-          latitude: parseFloat(event.location.lat),
-          longitude: parseFloat(event.location.lng)
-        }}
-        onPress={() => {
-          this.setState({
-            showPreview: true,
-            event,
-            destination: {
-              latitude: parseFloat(event.location.lat),
-              longitude: parseFloat(event.location.lng)
-            }
-          });
-          this.props.setSelectedEvent(event);
-        }}
-      >
-        <PosterMarker event={event} id={id} />
-      </Marker>
-    ));
+  renderMarker = events => events.map((event, id) => {
+      const eventGeoLoc = {
+        latitude: parseFloat(event.location.lat),
+        longitude: parseFloat(event.location.lng)
+      };
+
+      return (
+        <Marker
+          // title={event.title}
+          // image={flagPinkImg}
+          key={event._id}
+          // pinColor={'#ff00ff'}
+          coordinate={eventGeoLoc}
+          onPress={() => this.onMarkerPress(event, eventGeoLoc)}
+        >
+          {this.renderDistance(event._id)}
+          <PosterMarker event={event} id={id} />
+        </Marker>
+      );
+    });
+
+  renderDistance = eventId => {
+    if (this.props.event._id === eventId && this.state.showPreview) {
+      return (
+        <View
+          style={{
+            position: 'relative',
+            width: 100,
+            top: 40,
+            alignItems: 'center'
+          }}
+        >
+          <MaterialIcons
+            name='directions-car'
+            color={Colors.tintColor}
+            size={12}
+            style={{ backgroundColor: 'transparent' }}
+          />
+          <Text
+            style={{
+              fontSize: 10,
+              color: Colors.errorText,
+              paddingLeft: 3,
+              paddingRight: 3,
+              borderRadius: 3,
+              backgroundColor: '#ffffff99'
+            }}
+          >
+            {this.state.distance.distance} {this.state.distance.duration}
+          </Text>
+        </View>
+      );
+    }
+  };
+
+  onMarkerPress = async (event, eventGeoLoc) => {
+    this.setState({
+      showPreview: true,
+      event,
+      destination: eventGeoLoc,
+      distance: {}
+    });
+    this.props.setSelectedEvent(event);
+    let distance = await getDistanceMatrix(
+      this.state.userLocation,
+      eventGeoLoc
+    );
+    this.setState({ distance });
+  };
 
   renderRoute = () => {
     if (this.state.showPreview) {
@@ -164,7 +210,7 @@ class MapScreen extends React.Component {
         <MapViewDirections
           origin={this.state.userLocation}
           destination={this.state.destination}
-          apikey={GMAPS_API_KEY}
+          apikey={keys.google.maps_api_key}
           strokeWidth={3}
           strokeColor={Colors.lightTintColor}
         />
@@ -209,7 +255,6 @@ class MapScreen extends React.Component {
         <EventPreview
           onClosePreview={this.hideEventPreview}
           openEventDetail={this.openEventDetail}
-          event={this.state.event}
           getDirection={this.getDirection}
         />
       );
@@ -255,10 +300,6 @@ class MapScreen extends React.Component {
   }
 }
 
-MapScreen.propTypes = {
-  provider: ProviderPropType
-};
-
 const styles = StyleSheet.create({
   container: {
     ...StyleSheet.absoluteFillObject,
@@ -292,13 +333,17 @@ const styles = StyleSheet.create({
 });
 
 MapScreen.propTypes = {
+  provider: ProviderPropType,
   fetchEvents: PropTypes.func.isRequired,
   fetchEventsInThisArea: PropTypes.func.isRequired,
+  user: PropTypes.object.isRequired,
   navigation: PropTypes.object.isRequired,
   events: PropTypes.array
 };
 const mapStateToProps = state => ({
-  events: state.event.events || []
+  events: state.event.events || [],
+  event: state.event.event || {},
+  user: state.auth.user
 });
 
 export default connect(

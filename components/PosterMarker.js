@@ -49,8 +49,8 @@ export default class PosterMarker extends Component {
 
 const styles = StyleSheet.create({
   backgroundContainer: {
-    position: 'absolute',
-    top: 0,
+    position: 'relative',
+    top: 35,
     bottom: 0,
     left: 0,
     right: 0,

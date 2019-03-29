@@ -16,23 +16,52 @@ export const register = (userData, history) => dispatch => {
       }));
 };
 
+export const googleSignIn = params => dispatch => {
+  // Save token to local storage
+  const { accessToken, user } = params;
+  const apiParams = {
+    accessToken,
+    email: user.email,
+    firstname: user.givenName,
+    lastname: user.familyName,
+    avatar: user.photo,
+    username: user.email
+  };
+  axios
+    .post('/users/googleSignIn', apiParams)
+    .then(res => {
+      // Save token to local storage
+      const { token } = res.data;
+      // set token to ls
+      AsyncStorage.setItem('token', token);
+      // set token to auth header
+      setAuthToken(token);
+      // decode token to get user data
+      const decoded = jwt_decode(token);
+
+      dispatch({ type: LOGIN_SUCCESS, payload: token });
+      // set current user
+      dispatch(setCurrentUser(decoded));
+    })
+    .catch(err => console.log(err));
+};
+
 // Login
 export const login = params => dispatch => {
   axios
     .post('/users/login', params)
     .then(res => {
-      // // Save token to local storage
+      // Save token to local storage
       const { token } = res.data;
-      // // set token to ls
-      // localStorage.setItem('jwtToken', token);
+      // set token to ls
       AsyncStorage.setItem('token', token);
-      // // set token to auth header
+      // set token to auth header
       setAuthToken(token);
-      // // decode token to get user data
+      // decode token to get user data
       const decoded = jwt_decode(token);
 
       dispatch({ type: LOGIN_SUCCESS, payload: token });
-      // // set current user
+      // set current user
       dispatch(setCurrentUser(decoded));
     })
     .catch(err => console.log(err));

@@ -1,24 +1,21 @@
 import React, { Component } from 'react';
 import { View, Text } from 'react-native';
 import { Card, Button, Icon } from 'react-native-elements';
-import moment from 'moment';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import _ from 'lodash';
+
+import { like, unlike } from '../actions';
 
 class EventPreview extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
       <View>
         <Card
-          // title='HELLO WORLD'
-          // image={Marker1}
           image={{
             uri: this.props.event.poster
-            // 'http://imgs.abduzeedo.com/files/paul0v2/unsplash/unsplash-01.jpg'
           }}
-          containerStyle={{ marginBottom: 10, height: 210 }}
+          containerStyle={{ marginBottom: 10, height: 225 }}
           imageStyle={{ height: 100 }}
         >
           <View>
@@ -35,13 +32,33 @@ class EventPreview extends Component {
               size={15}
               onPress={() => this.props.onClosePreview()}
             />
-            <Text
-              style={{ marginBottom: 10, fontSize: 14, fontWeight: 'bold' }}
-            >
+            <Icon
+              containerStyle={{
+                position: 'absolute',
+                top: -35,
+                right: -10
+              }}
+              raised
+              name='heart'
+              type='font-awesome'
+              color={this.props.event.liked ? 'red' : 'lightgrey'}
+              size={15}
+              onPress={() => {
+                if (this.props.event.liked) {
+                  this.props.unlike(this.props.event._id);
+                } else {
+                  this.props.like(this.props.event._id);
+                }
+              }}
+            />
+            <Text style={{ marginBottom: 5, fontSize: 14, fontWeight: 'bold' }}>
               {this.props.event.title}
             </Text>
             <Text style={{ marginBottom: 10, fontSize: 10 }}>
-              {this.props.event.description}
+              {_.truncate(this.props.event.description, {
+                length: 200,
+                separator: ' '
+              })}
             </Text>
             <View
               style={{
@@ -75,4 +92,19 @@ class EventPreview extends Component {
   }
 }
 
-export default EventPreview;
+EventPreview.propTypes = {
+  onClosePreview: PropTypes.func.isRequired,
+  openEventDetail: PropTypes.func.isRequired,
+  getDirection: PropTypes.func.isRequired,
+  like: PropTypes.func.isRequired,
+  unlike: PropTypes.func.isRequired,
+  event: PropTypes.object.isRequired
+};
+const mapStateToProps = state => ({
+  event: state.event.event || {}
+});
+
+export default connect(
+  mapStateToProps,
+  { like, unlike }
+)(EventPreview);

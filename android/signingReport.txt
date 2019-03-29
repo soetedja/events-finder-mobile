@@ -1,0 +1,34 @@
+> Task :app:signingReport
+Variant: debugAndroidTest
+Config: debug
+Store: C:\Users\irfan_s\.android\debug.keystore
+Alias: AndroidDebugKey
+MD5: 4E:D7:55:77:BD:C3:EC:E7:05:97:75:18:E3:94:49:18
+SHA1: 31:6C:9D:16:88:2E:D6:60:CB:8C:EE:60:07:C3:D6:C9:64:9A:66:02
+SHA-256: C1:DC:1B:DF:3B:61:B1:4C:7A:1E:97:7F:E6:2E:66:8C:F6:09:34:62:8D:FE:0F:7D:53:1F:A8:51:DD:C6:7D:B3
+Valid until: Monday, January 27, 2048
+----------
+Variant: releaseUnitTest
+Config: none
+----------
+Variant: release
+Config: none
+----------
+Variant: debugUnitTest
+Config: debug
+Store: C:\Users\irfan_s\.android\debug.keystore
+Alias: AndroidDebugKey
+MD5: 4E:D7:55:77:BD:C3:EC:E7:05:97:75:18:E3:94:49:18
+SHA1: 31:6C:9D:16:88:2E:D6:60:CB:8C:EE:60:07:C3:D6:C9:64:9A:66:02
+SHA-256: C1:DC:1B:DF:3B:61:B1:4C:7A:1E:97:7F:E6:2E:66:8C:F6:09:34:62:8D:FE:0F:7D:53:1F:A8:51:DD:C6:7D:B3
+Valid until: Monday, January 27, 2048
+----------
+Variant: debug
+Config: debug
+Store: C:\Users\irfan_s\.android\debug.keystore
+Alias: AndroidDebugKey
+MD5: 4E:D7:55:77:BD:C3:EC:E7:05:97:75:18:E3:94:49:18
+SHA1: 31:6C:9D:16:88:2E:D6:60:CB:8C:EE:60:07:C3:D6:C9:64:9A:66:02
+SHA-256: C1:DC:1B:DF:3B:61:B1:4C:7A:1E:97:7F:E6:2E:66:8C:F6:09:34:62:8D:FE:0F:7D:53:1F:A8:51:DD:C6:7D:B3
+Valid until: Monday, January 27, 2048
+----------
